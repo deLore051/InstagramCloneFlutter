@@ -27,6 +27,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final Color primaryColorToUse = Colors.amber.shade300;
+
     return Scaffold(
       body: SafeArea(
         child: Container(
@@ -38,10 +40,10 @@ class _LoginScreenState extends State<LoginScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Padding(
-                padding: const EdgeInsets.only(top: 30),
+                padding: const EdgeInsets.only(top: 50),
                 child: SvgPicture.asset(
                   "assets/ic_instagram.svg", 
-                  color: Colors.amber.shade300, 
+                  color: primaryColorToUse, 
                   height: 64,
                 ),
               ),
@@ -64,32 +66,72 @@ class _LoginScreenState extends State<LoginScreen> {
                 _passwordController, 
                 TextInputType.text
               ),
-              Container(
-              width: double.infinity,
-              padding: EdgeInsets.fromLTRB(10, 40, 10, 20),
-              child: ElevatedButton(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.resolveWith<Color?>(
-                    (Set<MaterialState> states) {
-                      if(states.contains(MaterialState.pressed)) {
-                        return Colors.blue.withOpacity(0.3);
-                      } 
-                      return Colors.blue;
-                    }
+              InkWell(
+                child: Container(
+                width: double.infinity,
+                padding: EdgeInsets.fromLTRB(10, 40, 10, 20),
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.resolveWith<Color?>(
+                      (Set<MaterialState> states) {
+                        if(states.contains(MaterialState.pressed)) {
+                          return primaryColorToUse.withOpacity(0.3);
+                        } 
+                        return primaryColorToUse;
+                      }
+                    ),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      side: BorderSide(color: primaryColorToUse)
+                    )), 
                   ),
-                ),
-                child: Text(
-                  "Log In",
-                  style: TextStyle(
-                    color: Theme.of(context).textTheme.bodyMedium!.color
+                  child: Text(
+                    "Log In",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
+                  onPressed: () {
+                    return print("log in pressed");
+                  },
                 ),
-                onPressed: () {
-                  return print("log in pressed");
-                },
+                          ),
               ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  child: Text(
+                    "Don't have an account?",
+                    
+                    style: TextStyle(
+                      fontSize: 16,
+                    ),
+                  ),
+                  padding: const EdgeInsets.only(
+                    top: 5,
+                    right: 5,
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    
+                  },
+                  child: Container(
+                    child: Text(
+                      "Sign Up.",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: primaryColorToUse
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             )
-            // transitioning to sign up
             ],
           ),
         ),

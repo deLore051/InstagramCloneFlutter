@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram_clone/Screens/login_screen.dart';
+import 'package:instagram_clone/Screens/singup_screen.dart';
 import './Resources/colors.dart';
 import './Responsive/mobile_screen_layout.dart';
 import './Responsive/web_screen_layout.dart';
@@ -39,14 +40,14 @@ class MyApp extends StatelessWidget {
         textTheme: TextTheme(
           bodyMedium: TextStyle(
             color: Colors.white,
-          )
+          ),
         ),
       ),
       // home: const ResponsiveLayout(
       //   webScreemLayout: WebScreenLayout(), 
       //   mobileScreenLayout: MobileScreenLayout(),
       // ),
-      home: LoginScreen()
+      home: SignUpScreen()
     );
   }
 }

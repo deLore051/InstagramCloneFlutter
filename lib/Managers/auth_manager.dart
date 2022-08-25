@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:instagram_clone/Managers/storage_manager.dart';
 
 class AuthManager {
   AuthManager._privateConstructor();
@@ -19,7 +20,7 @@ class AuthManager {
     required String password,
     required String username,
     required String bio,
-    //required Uint8List profilePhoto,
+    required Uint8List image,
   }) async {
     String result = "Some error occured";
     try {
@@ -30,6 +31,12 @@ class AuthManager {
           // Register user
           UserCredential credential = await _auth.createUserWithEmailAndPassword(email: email, password: password);
 
+          String photoURL = await StorageManager.shared.uploadImageToStorage(
+            "profilePhotos", 
+            image, 
+            false
+          );
+
           // Add user info to our database
           await _firestore.collection('users').doc(credential.user!.uid).set({
             "email": email,
@@ -38,12 +45,13 @@ class AuthManager {
             "bio": bio,
             "followers": [],
             "following": [],
+            "profilePhotoURL": photoURL,
           });
           result = "success";
       }
-    } catch(error) {
-      result = error.toString();
-    }
+    } on FirebaseAuthException catch(error) {
+      result = error.code;
+    } 
     return result;
   }
 }

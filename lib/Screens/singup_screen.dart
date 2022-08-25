@@ -1,7 +1,10 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:instagram_clone/Managers/auth_manager.dart';
+import 'package:instagram_clone/Resources/utils.dart';
 import '../Widgets/text_field_input.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -16,6 +19,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _bioController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
+  Uint8List? _image;
 
 
   @override
@@ -25,6 +29,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
     _passwordController.dispose();
     _bioController.dispose();
     _usernameController.dispose();
+  }
+
+  void selectImage() async {
+    Uint8List image = await pickImage(ImageSource.gallery);
+    setState(() {
+      _image = image;
+    });
+  }
+
+  void signUpUser() async {
+    String res = await AuthManager.shared.signUpUser(
+        email: _emailController.text,
+        password: _passwordController.text,
+        username: _usernameController.text,
+        bio: _bioController.text,
+        image: _image!);
+    if(res != "success") {
+      
+    }
+
   }
 
   @override
@@ -59,10 +83,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                   Stack(
                     children: [
-                      CircleAvatar(
+                      _image != null 
+                      ? CircleAvatar(
+                        radius: 64,
+                        backgroundImage: MemoryImage(_image!),
+                      )
+                      : const CircleAvatar(
                         radius: 64,
                         backgroundImage: NetworkImage(
-                          "https://images.unsplash.com/photo-1661213771748-db6d422c3c23?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80" 
+                          "https://thumbs.dreamstime.com/b/default-profile-picture-avatar-photo-placeholder-vector-illustration-default-profile-picture-avatar-photo-placeholder-vector-189495158.jpg" 
                         ),
                       ),
                       Positioned(
@@ -71,7 +100,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         child: IconButton(
                           color: primaryColorToUse,
                           onPressed: () {
-                            
+                            selectImage();
                           },
                           icon: const Icon(Icons.add_a_photo),
                         )
@@ -148,14 +177,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      onPressed: () async {
-                        String res = await AuthManager.shared.signUpUser(
-                        email: _emailController.text, 
-                        password: _passwordController.text, 
-                        username: _usernameController.text, 
-                        bio: _bioController.text);
-                        print(res);
-                      }
+                      onPressed: signUpUser,
                     ),
                               ),
                   ),

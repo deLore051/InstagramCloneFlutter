@@ -148,9 +148,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      onPressed: () {
-                        return print("sign up pressed");
-                      },
+                      onPressed: () async {
+                        String res = await AuthManager.shared.signUpUser(
+                        email: _emailController.text, 
+                        password: _passwordController.text, 
+                        username: _usernameController.text, 
+                        bio: _bioController.text);
+                        print(res);
+                      }
                     ),
                               ),
                   ),

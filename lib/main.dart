@@ -22,7 +22,7 @@ void main() async {
           storageBucket: "instagram-clone-app-flutter.appspot.com",
         )
     ) 
-    : Text("sss");
+    : await Firebase.initializeApp();
   runApp(const MyApp());
 }
 

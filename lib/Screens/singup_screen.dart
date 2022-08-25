@@ -46,7 +46,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         bio: _bioController.text,
         image: _image!);
     if(res != "success") {
-      
+      showSnackBar(res, context);
     }
 
   }

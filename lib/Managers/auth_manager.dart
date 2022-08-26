@@ -48,9 +48,25 @@ class AuthManager {
             "profilePhotoURL": photoURL,
           });
           result = "success";
+      } else {
+        result = "All required fields must be filled up";
       }
-    } on FirebaseAuthException catch(error) {
-      result = error.code;
+    } catch(error) {
+      switch (error.toString()) {
+        case "auth/email-already-in-use":
+          result = "The email addres that you entered is already in use!";
+          break;
+        case "auth/invalid-email":
+          result = "The entered email is incorrect!";
+          break;
+        case "auth/weak-password":
+          result = "The password must be at least 6 characters long!";
+          break;
+        case "auth/operation-not-allowed":
+          result = "Operation not allowed!";
+          break;  
+        default:
+      } 
     } 
     return result;
   }

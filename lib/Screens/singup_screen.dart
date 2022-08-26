@@ -20,7 +20,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _bioController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
   Uint8List? _image;
-
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -39,12 +39,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   void signUpUser() async {
+    setState(() {
+      _isLoading = true;
+    });
     String res = await AuthManager.shared.signUpUser(
         email: _emailController.text,
         password: _passwordController.text,
         username: _usernameController.text,
         bio: _bioController.text,
         image: _image!);
+    setState(() {
+      _isLoading = false;
+    });
     if(res != "success") {
       showSnackBar(res, context);
     }
@@ -148,45 +154,51 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     height: 10,
                   ),
                   InkWell(
-                    child: Container(
+                  child: Container(
                     width: double.infinity,
                     padding: EdgeInsets.fromLTRB(10, 40, 10, 20),
-                    child: ElevatedButton(
-                      style: ButtonStyle(
-                        padding: MaterialStateProperty.all<EdgeInsets>(
-                          EdgeInsets.all(10)
-                        ),
-                        backgroundColor: MaterialStateProperty.resolveWith<Color?>(
-                          (Set<MaterialState> states) {
-                            if(states.contains(MaterialState.pressed)) {
-                              return primaryColorToUse.withOpacity(0.3);
-                            } 
-                            return primaryColorToUse;
-                          }
-                        ),
-                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                          side: BorderSide(color: primaryColorToUse)
-                        )), 
-                      ),
-                      child: Text(
-                        "Sign Up",
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      onPressed: signUpUser,
-                    ),
+                    child: _isLoading
+                        ? Center(
+                          child: CircularProgressIndicator(
+                            color: primaryColorToUse,
+                          ),
+                        )
+                        : ElevatedButton(
+                            style: ButtonStyle(
+                              padding: MaterialStateProperty.all<EdgeInsets>(
+                                  EdgeInsets.all(10)),
+                              backgroundColor:
+                                  MaterialStateProperty.resolveWith<Color?>(
+                                      (Set<MaterialState> states) {
+                                if (states.contains(MaterialState.pressed)) {
+                                  return primaryColorToUse.withOpacity(0.3);
+                                }
+                                return primaryColorToUse;
+                              }),
+                              shape: MaterialStateProperty.all<
+                                      RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(30),
+                                      side: BorderSide(
+                                          color: primaryColorToUse))),
+                            ),
+                            child: Text(
+                              "Sign Up",
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
                               ),
+                            ),
+                            onPressed: signUpUser,
+                          ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
-        )
-      ),
+        ),
+      )),
     );
   }
 }

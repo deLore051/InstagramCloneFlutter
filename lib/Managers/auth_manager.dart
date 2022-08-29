@@ -70,4 +70,35 @@ class AuthManager {
     } 
     return result;
   }
+
+  Future<String> logInUser({
+    required String email,
+    required String password
+  }) async {
+    String result = "Some error occured!";
+    try {
+      if(email.isNotEmpty && password.isNotEmpty) {
+        _auth.signInWithEmailAndPassword(
+          email: email, 
+          password: password
+        );
+        result = "Success";
+      } else {
+        result = "Please fill all the required fields, before trying to sign in!";
+      }
+    } catch(error) {
+      print(error.toString());
+      switch(error.toString()) {
+        case "firebase_auth/wrong-password":
+          result = "The password you entered is invalid! Please try again.";
+          break;
+        case "firebase_auth/user-not-found":
+          result = "There is no user account record with the entered email address! Please check if you entered the email address properly.123";
+          break;
+      }
+    }
+    return result;
+  }
+
+
 }
